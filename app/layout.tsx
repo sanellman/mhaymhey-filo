@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import './globals.css';
+
+export const metadata: Metadata = {
+  title: 'mhaymhey ✦ Stellagrima',
+  description: 'mhaymhey fan site — Stellagrima 💙',
+};
 
 export default function RootLayout({
   children,
@@ -7,10 +13,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="th">
-      <body className="bg-neutral-100 text-neutral-900">
-        <main className="max-w-md mx-auto min-h-screen p-4">
-          {children}
-        </main>
+      <body className="bg-[#EFF8FF] text-[#1A3A5C]">
+        {children}
       </body>
     </html>
   );
