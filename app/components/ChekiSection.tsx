@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
+import ChekiReport from './ChekiReport';
 
 // ─── Types ───────────────────────────────────────────────────────────────
 export type DayEntry = {
@@ -44,6 +45,11 @@ export default function ChekiSection() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [allData, setAllData] = useState<ChekiAllData>(loadChekiData);
+  const [showReport, setShowReport] = useState(false);
+
+  const eventCount = Object.values(allData).filter(
+    (d) => Object.keys(d.counts).length > 0
+  ).length;
 
   const knownMembers = [...new Set(
     Object.values(allData).flatMap((d) => Object.keys(d.counts))
@@ -93,14 +99,27 @@ export default function ChekiSection() {
       <div className="max-w-md mx-auto space-y-4">
 
         {/* Header */}
-        <div>
-          <p className="text-[10px] font-bold text-[#72C4E8]/70 uppercase tracking-widest mb-0.5">
-            Fan Tool
-          </p>
-          <h2 className="text-xl font-black text-white">📸 Cheki Count</h2>
-          <p className="text-xs text-white/40 mt-0.5">
-            Track cheki counts per event — report-ready
-          </p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-bold text-[#72C4E8]/70 uppercase tracking-widest mb-0.5">
+              Fan Tool
+            </p>
+            <h2 className="text-xl font-black text-white">📸 Cheki Count</h2>
+            <p className="text-xs text-white/40 mt-0.5">
+              Track cheki counts per event — report-ready
+            </p>
+          </div>
+          <button
+            onClick={() => setShowReport(true)}
+            className="relative shrink-0 flex items-center gap-1.5 bg-white/10 hover:bg-[#1B90C8]/30 border border-white/15 hover:border-[#1B90C8]/50 text-white/70 hover:text-white rounded-xl px-3 py-2 text-xs font-bold transition"
+          >
+            📊 Report
+            {eventCount > 0 && (
+              <span className="bg-[#1B90C8] text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">
+                {eventCount > 99 ? '99+' : eventCount}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* ── Step 1: วันที่และงาน ───────────────────────────────────── */}
@@ -255,6 +274,12 @@ export default function ChekiSection() {
 
         <p className="text-center text-xs text-white/15 pt-1">made with 💙 for mhaymhey</p>
       </div>
+
+      <ChekiReport
+        open={showReport}
+        onClose={() => setShowReport(false)}
+        allData={allData}
+      />
     </section>
   );
 }

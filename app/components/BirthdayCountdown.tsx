@@ -6,6 +6,7 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 import ScheduleSection from './ScheduleSection';
 import { loadChekiData, saveChekiData, type ChekiAllData } from './ChekiSection';
+import ChekiReport from './ChekiReport';
 
 // April 6, 2026 00:00:00
 const BIRTHDAY = new Date(2026, 3, 6, 0, 0, 0);
@@ -51,7 +52,12 @@ function ChekiCount() {
   const [custom, setCustom]   = useState('');
   const [showSug, setShowSug] = useState(false);
   const [allData, setAllData] = useState<ChekiAllData>(loadChekiData);
+  const [showReport, setShowReport] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const eventCount = Object.values(allData).filter(
+    (d) => Object.keys(d.counts).length > 0
+  ).length;
 
   const entry = allData[date] ?? { eventName: '', counts: {} };
 
@@ -98,10 +104,23 @@ function ChekiCount() {
   return (
     <div className="w-full max-w-md mx-auto space-y-3">
       {/* Header */}
-      <div className="text-center">
-        <p className="text-[10px] font-bold tracking-widest uppercase text-[#72C4E8] mb-0.5">Fan Tool</p>
-        <h3 className="text-lg font-black text-white">📸 Cheki Count</h3>
-        {total > 0 && <p className="text-sm text-[#72C4E8] font-semibold mt-0.5">Total: {total} pcs</p>}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[10px] font-bold tracking-widest uppercase text-[#72C4E8] mb-0.5">Fan Tool</p>
+          <h3 className="text-lg font-black text-white">📸 Cheki Count</h3>
+          {total > 0 && <p className="text-sm text-[#72C4E8] font-semibold mt-0.5">Total: {total} pcs</p>}
+        </div>
+        <button
+          onClick={() => setShowReport(true)}
+          className="shrink-0 flex items-center gap-1.5 bg-white/10 hover:bg-[#1B90C8]/30 border border-white/15 hover:border-[#1B90C8]/50 text-white/70 hover:text-white rounded-xl px-3 py-2 text-xs font-bold transition"
+        >
+          📊 Report
+          {eventCount > 0 && (
+            <span className="bg-[#1B90C8] text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">
+              {eventCount > 99 ? '99+' : eventCount}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* Date */}
@@ -171,6 +190,12 @@ function ChekiCount() {
           </div>
         ))}
       </div>
+
+      <ChekiReport
+        open={showReport}
+        onClose={() => setShowReport(false)}
+        allData={allData}
+      />
     </div>
   );
 }
