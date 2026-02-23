@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import dayjs from 'dayjs';
-import AddIdolInput from './AddIdolInput';
 import ScheduleSection from './ScheduleSection';
+import { loadChekiData, saveChekiData, type ChekiAllData } from './ChekiSection';
 
 // April 6, 2026 00:00:00
 const BIRTHDAY = new Date(2026, 3, 6, 0, 0, 0);
@@ -44,83 +44,130 @@ function getTimeLeft(): TimeLeft {
 
 function pad(n: number) { return String(n).padStart(2, '0'); }
 
-// ─── Inline Cheki Count (dark-themed) ─────────────────────────────────────
-type DayData = { [idol: string]: number };
-type AllData = Record<string, DayData>;
-
+// ─── Inline Cheki Count (shared data model with ChekiSection) ─────────────
 function ChekiCount() {
   const today = dayjs().format('YYYY-MM-DD');
-  const [date, setDate] = useState(today);
-  const [allData, setAllData] = useState<AllData>(() => {
-    if (typeof window === 'undefined') return {};
-    const raw = localStorage.getItem('cheki-data');
-    return raw ? JSON.parse(raw) : {};
-  });
+  const [date, setDate]       = useState(today);
+  const [custom, setCustom]   = useState('');
+  const [showSug, setShowSug] = useState(false);
+  const [allData, setAllData] = useState<ChekiAllData>(loadChekiData);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const dayData = allData[date] || {};
+  const entry = allData[date] ?? { eventName: '', counts: {} };
 
-  const saveDay = (next: DayData) => {
+  const knownMembers = [...new Set(
+    Object.values(allData).flatMap((d) => Object.keys(d.counts))
+  )];
+
+  const suggestions = knownMembers.filter(
+    (m) =>
+      !(m in entry.counts) &&
+      (custom.trim() === '' || m.toLowerCase().includes(custom.toLowerCase()))
+  );
+
+  const save = (next: typeof entry) => {
     const updated = { ...allData, [date]: next };
     setAllData(updated);
-    localStorage.setItem('cheki-data', JSON.stringify(updated));
+    saveChekiData(updated);
   };
 
-  const addIdol = (idol: string) => {
-    if (dayData[idol] !== undefined) return;
-    saveDay({ ...dayData, [idol]: 0 });
+  const addMember = (name: string) => {
+    const t = name.trim();
+    if (!t || t in entry.counts) return;
+    save({ ...entry, counts: { ...entry.counts, [t]: 0 } });
+    setCustom('');
+    setShowSug(false);
+    inputRef.current?.blur();
   };
 
-  const addCheki = (idol: string, delta: number) => {
-    const current = dayData[idol] || 0;
-    saveDay({ ...dayData, [idol]: Math.max(0, current + delta) });
+  const addCheki = (member: string, delta: number) => {
+    const current = entry.counts[member] ?? 0;
+    save({ ...entry, counts: { ...entry.counts, [member]: Math.max(0, current + delta) } });
   };
 
-  const total = Object.values(dayData).reduce((s, n) => s + n, 0);
+  const removeMember = (member: string) => {
+    if (!window.confirm(`Remove "${member}" from the list?`)) return;
+    const counts = { ...entry.counts };
+    delete counts[member];
+    save({ ...entry, counts });
+  };
+
+  const memberList = Object.entries(entry.counts);
+  const total = memberList.reduce((s, [, n]) => s + n, 0);
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-4">
+    <div className="w-full max-w-md mx-auto space-y-3">
       {/* Header */}
       <div className="text-center">
         <p className="text-[10px] font-bold tracking-widest uppercase text-[#72C4E8] mb-0.5">Fan Tool</p>
         <h3 className="text-lg font-black text-white">📸 Cheki Count</h3>
-        {total > 0 && (
-          <p className="text-sm text-[#72C4E8] font-semibold mt-0.5">รวมวันนี้: {total} ใบ</p>
+        {total > 0 && <p className="text-sm text-[#72C4E8] font-semibold mt-0.5">Total: {total} pcs</p>}
+      </div>
+
+      {/* Date */}
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        className="w-full bg-white/10 border border-white/20 text-white text-center rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8] [color-scheme:dark]"
+      />
+
+      {/* Input + suggestions */}
+      <div className="relative">
+        <div className="flex gap-2">
+          <input
+            ref={inputRef}
+            type="text"
+            value={custom}
+            onChange={(e) => { setCustom(e.target.value); setShowSug(true); }}
+            onFocus={() => setShowSug(true)}
+            onBlur={() => setTimeout(() => setShowSug(false), 150)}
+            onKeyDown={(e) => e.key === 'Enter' && addMember(custom)}
+            placeholder="Member name..."
+            className="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/30 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8]"
+          />
+          <button
+            onClick={() => addMember(custom)}
+            disabled={!custom.trim()}
+            className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-bold hover:bg-white/20 disabled:opacity-30 transition"
+          >
+            Add
+          </button>
+        </div>
+
+        {/* Autocomplete dropdown */}
+        {showSug && suggestions.length > 0 && (
+          <div className="absolute z-20 mt-1 w-full bg-[#0A1E2E] border border-white/20 rounded-xl overflow-hidden shadow-2xl">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onMouseDown={() => addMember(s)}
+                className="block w-full text-left px-4 py-2.5 text-sm text-white hover:bg-white/10 transition"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         )}
       </div>
 
-      {/* Date picker */}
-      <div className="bg-white/10 border border-white/20 rounded-2xl p-3 space-y-1.5">
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="w-full bg-transparent text-white text-center rounded-xl border border-white/20 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8] [color-scheme:dark]"
-        />
-        <p className="text-center text-xs text-[#72C4E8]">📅 {dayjs(date).format('DD MMM YYYY')}</p>
-      </div>
-
-      {/* Add input */}
-      <div className="[&_input]:bg-white/10 [&_input]:border-white/20 [&_input]:text-white [&_input]:placeholder-white/40 [&_input]:rounded-2xl [&_div]:bg-[#0D2A40] [&_button]:text-white [&_button]:hover:bg-white/10">
-        <AddIdolInput onAdd={addIdol} />
-      </div>
-
       {/* Empty */}
-      {Object.keys(dayData).length === 0 && (
-        <p className="text-center text-white/40 text-sm">ยังไม่มีการนับเชกิวันนี้</p>
+      {memberList.length === 0 && (
+        <p className="text-center text-white/40 text-sm py-4">No members yet</p>
       )}
 
       {/* Cards */}
       <div className="space-y-2">
-        {Object.entries(dayData).map(([idol, count]) => (
-          <div key={idol} className="bg-white/10 border border-white/15 rounded-2xl px-4 py-3 flex items-center justify-between">
-            <div>
-              <p className="font-semibold text-white text-sm">{idol}</p>
-              <p className="text-xl font-black text-[#72C4E8]">{count} ใบ</p>
+        {memberList.map(([member, count]) => (
+          <div key={member} className="bg-white/10 border border-white/15 rounded-xl px-3 py-2 flex items-center gap-2">
+            <p className="flex-1 font-semibold text-white text-sm truncate">{member}</p>
+            <button onClick={() => addCheki(member, -1)} disabled={count === 0} className="w-8 h-8 rounded-full bg-white/10 border border-white/20 text-white text-lg font-black hover:bg-white/20 disabled:opacity-30 transition flex items-center justify-center shrink-0">−</button>
+            <div className="w-12 text-center shrink-0">
+              <span className="text-2xl font-black text-white tabular-nums">{count}</span>
+              <p className="text-[9px] text-[#72C4E8] leading-none">pcs</p>
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => addCheki(idol, -1)} className="w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white text-xl font-bold hover:bg-white/20 transition">−</button>
-              <button onClick={() => addCheki(idol, +1)} className="w-10 h-10 rounded-full bg-[#1B90C8] text-white text-xl font-bold hover:bg-[#0F75A8] transition shadow-md">+</button>
-            </div>
+            <button onClick={() => addCheki(member, +1)} className="w-8 h-8 rounded-full bg-[#1B90C8] text-white text-lg font-black hover:bg-[#0F75A8] transition shadow flex items-center justify-center shrink-0">+</button>
+            <button onClick={() => removeMember(member)} className="w-6 h-6 rounded-full bg-white/10 text-white/30 hover:bg-red-500/30 hover:text-red-400 text-[10px] transition flex items-center justify-center shrink-0" title="Remove">✕</button>
           </div>
         ))}
       </div>
