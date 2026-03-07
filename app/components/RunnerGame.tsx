@@ -182,6 +182,8 @@ export default function RunnerGame() {
   const [nameInput, setNameInput]     = useState('');
   const [showNameEdit, setShowNameEdit] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LBEntry[]>([]);
+  const [lbLoading, setLbLoading]     = useState(true);
+  const [lbError, setLbError]         = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [myRank, setMyRank]           = useState<number | null>(null);
 
@@ -197,16 +199,23 @@ export default function RunnerGame() {
   }, []);
 
   const fetchLeaderboard = useCallback(async (currentName?: string) => {
+    setLbLoading(true);
+    setLbError(false);
     try {
       const res = await fetch('/api/leaderboard', { cache: 'no-store' });
-      const data = await res.json() as { entries: LBEntry[] };
+      const data = await res.json() as { entries: LBEntry[]; error?: string };
+      if (data.error === 'kv_unavailable') { setLbError(true); return; }
       setLeaderboard(data.entries ?? []);
       const name = currentName ?? playerName;
       if (name) {
         const rank = data.entries.findIndex((e) => e.name === name);
         setMyRank(rank >= 0 ? rank + 1 : null);
       }
-    } catch { /* offline */ }
+    } catch {
+      setLbError(true);
+    } finally {
+      setLbLoading(false);
+    }
   }, [playerName]);
 
   useEffect(() => { fetchLeaderboard(); }, [fetchLeaderboard]);
@@ -496,7 +505,11 @@ export default function RunnerGame() {
             <span className="text-[10px] font-bold uppercase tracking-widest text-white/25">ชื่อ</span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-white/25 text-right">คะแนน</span>
           </div>
-          {leaderboard.length === 0 ? (
+          {lbLoading ? (
+            <p className="text-center text-white/20 text-xs py-6">กำลังโหลด...</p>
+          ) : lbError ? (
+            <p className="text-center text-white/20 text-xs py-6">ไม่สามารถเชื่อมต่อ Leaderboard ได้</p>
+          ) : leaderboard.length === 0 ? (
             <p className="text-center text-white/20 text-xs py-6">ยังไม่มีข้อมูล</p>
           ) : (
             <div className="divide-y divide-white/5">
