@@ -64,6 +64,16 @@ function exportCSV(events: ReturnType<typeof getEvents>) {
   URL.revokeObjectURL(url);
 }
 
+function exportJSON(allData: ChekiAllData) {
+  const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cheki-backup-${dayjs().format('YYYYMMDD')}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
@@ -251,7 +261,7 @@ function MonthlyTab({ events }: { events: ReturnType<typeof getEvents> }) {
 
 // ─── Tab: งานทั้งหมด ──────────────────────────────────────────────────────────
 
-function EventsTab({ events }: { events: ReturnType<typeof getEvents> }) {
+function EventsTab({ events, allData }: { events: ReturnType<typeof getEvents>; allData: ChekiAllData }) {
   const [expandedEvent, setExpandedEvent] = useState<string | null>(null);
 
   if (events.length === 0) {
@@ -265,13 +275,21 @@ function EventsTab({ events }: { events: ReturnType<typeof getEvents> }) {
 
   return (
     <div className="space-y-3">
-      {/* Export button */}
-      <button
-        onClick={() => exportCSV(events)}
-        className="w-full flex items-center justify-center gap-2 bg-white/8 border border-white/15 hover:bg-white/12 transition rounded-xl py-2.5 text-sm font-semibold text-white/70 hover:text-white"
-      >
-        <span>⬇</span> Export CSV
-      </button>
+      {/* Export buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => exportCSV(events)}
+          className="flex-1 flex items-center justify-center gap-2 bg-white/8 border border-white/15 hover:bg-white/12 transition rounded-xl py-2.5 text-sm font-semibold text-white/70 hover:text-white"
+        >
+          <span>⬇</span> CSV
+        </button>
+        <button
+          onClick={() => exportJSON(allData)}
+          className="flex-1 flex items-center justify-center gap-2 bg-white/8 border border-white/15 hover:bg-white/12 transition rounded-xl py-2.5 text-sm font-semibold text-white/70 hover:text-white"
+        >
+          <span>⬇</span> JSON
+        </button>
+      </div>
 
       {/* Event list */}
       <div className="space-y-2">
@@ -437,7 +455,7 @@ export default function ChekiReport({ open, onClose, allData }: Props) {
             <div className="flex-1 overflow-y-auto px-5 py-4 min-h-0">
               {tab === 'overview' && <OverviewTab events={events} />}
               {tab === 'monthly' && <MonthlyTab events={events} />}
-              {tab === 'events' && <EventsTab events={events} />}
+              {tab === 'events' && <EventsTab events={events} allData={allData} />}
             </div>
 
             {/* Footer */}

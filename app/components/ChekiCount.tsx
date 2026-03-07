@@ -12,7 +12,59 @@ export default function ChekiCount() {
   const [showSug, setShowSug] = useState(false);
   const [allData, setAllData] = useState<ChekiAllData>(loadChekiData);
   const [showReport, setShowReport] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef  = useRef<HTMLInputElement>(null);
+  const importRef = useRef<HTMLInputElement>(null);
+
+  const parseCSV = (text: string): ChekiAllData => {
+    const lines = text.trim().split('\n');
+    const header = lines[0].split(',');
+    // columns: Date, Event, ...members, Total
+    const memberCols = header.slice(2, header.length - 1);
+    const result: ChekiAllData = {};
+    for (const line of lines.slice(1)) {
+      if (!line.trim()) continue;
+      // handle quoted event name
+      const match = line.match(/^([^,]+),("(?:[^"]|"")*"|[^,]*),(.*)/);
+      if (!match) continue;
+      const date      = match[1].trim();
+      const eventName = match[2].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+      const rest      = match[3].split(',');
+      const counts: Record<string, number> = {};
+      memberCols.forEach((m, i) => {
+        const n = parseInt(rest[i] ?? '0', 10);
+        if (!isNaN(n) && n > 0) counts[m] = n;
+      });
+      result[date] = { eventName, counts };
+    }
+    return result;
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const isCSV = file.name.endsWith('.csv');
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = reader.result as string;
+        let parsed: ChekiAllData;
+        if (isCSV) {
+          parsed = parseCSV(text);
+        } else {
+          parsed = JSON.parse(text) as ChekiAllData;
+          if (typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error();
+        }
+        const merged = { ...allData, ...parsed };
+        setAllData(merged);
+        saveChekiData(merged);
+        alert(`นำเข้าสำเร็จ ${Object.keys(parsed).length} รายการ`);
+      } catch {
+        alert('ไฟล์ไม่ถูกต้อง กรุณาใช้ไฟล์ .json หรือ .csv ที่ export จาก Cheki Report');
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  };
 
   const eventCount = Object.values(allData).filter(
     (d) => Object.keys(d.counts).length > 0
@@ -69,17 +121,32 @@ export default function ChekiCount() {
           <h3 className="text-lg font-black text-white">📸 Cheki Count</h3>
           {total > 0 && <p className="text-sm text-[#72C4E8] font-semibold mt-0.5">Total: {total} pcs</p>}
         </div>
-        <button
-          onClick={() => setShowReport(true)}
-          className="shrink-0 flex items-center gap-1.5 bg-white/10 hover:bg-[#1B90C8]/30 border border-white/15 hover:border-[#1B90C8]/50 text-white/70 hover:text-white rounded-xl px-3 py-2 text-xs font-bold transition"
-        >
-          📊 Report
-          {eventCount > 0 && (
-            <span className="bg-[#1B90C8] text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">
-              {eventCount > 99 ? '99+' : eventCount}
-            </span>
-          )}
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <input
+            ref={importRef}
+            type="file"
+            accept=".json,.csv"
+            onChange={handleImport}
+            className="hidden"
+          />
+          <button
+            onClick={() => importRef.current?.click()}
+            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/15 text-white/70 hover:text-white rounded-xl px-3 py-2 text-xs font-bold transition"
+          >
+            ⬆ Import
+          </button>
+          <button
+            onClick={() => setShowReport(true)}
+            className="flex items-center gap-1.5 bg-white/10 hover:bg-[#1B90C8]/30 border border-white/15 hover:border-[#1B90C8]/50 text-white/70 hover:text-white rounded-xl px-3 py-2 text-xs font-bold transition"
+          >
+            📊 Report
+            {eventCount > 0 && (
+              <span className="bg-[#1B90C8] text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">
+                {eventCount > 99 ? '99+' : eventCount}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Date */}
