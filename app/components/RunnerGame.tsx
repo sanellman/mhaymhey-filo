@@ -110,6 +110,8 @@ function drawScene(
   score: number, frame: number, phase: string,
   milestoneText: string, milestoneAlpha: number, milestoneColor: string,
 ) {
+  const dpr = (typeof window !== 'undefined' ? window.devicePixelRatio : 1) || 1;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = '#06172A'; ctx.fillRect(0, 0, CW, CH);
   STARS.forEach((s) => {
     const sx = ((s.x - starOffset * s.speed) % CW + CW) % CW;
@@ -362,11 +364,16 @@ export default function RunnerGame() {
   }, [jump]);
 
   useEffect(() => {
+    const dpr = window.devicePixelRatio || 1;
     let id: ReturnType<typeof setInterval>;
     const tryDraw = () => {
       const canvas = canvasRef.current;
       const ctx    = canvas?.getContext('2d');
       if (!canvas || !ctx) return;
+      if (canvas.width !== CW * dpr) {
+        canvas.width  = CW * dpr;
+        canvas.height = CH * dpr;
+      }
       drawScene(ctx, GY - CHAR_H, imgRef.current, [], 0, 0, 0, 0, 'idle', '', 0, '');
       if (imgRef.current) clearInterval(id);
     };
