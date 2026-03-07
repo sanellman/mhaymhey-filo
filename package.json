@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
+    "@vercel/kv": "^3.0.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.19",
     "framer-motion": "^12.34.3",

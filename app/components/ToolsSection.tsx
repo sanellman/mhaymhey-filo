@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import ScheduleSection from './ScheduleSection';
 import ChekiCount from './ChekiCount';
-
 const TABS = [
   { id: 'cheki',    label: '📸 Cheki Count' },
   { id: 'schedule', label: '📅 Schedule' },
