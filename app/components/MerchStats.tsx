@@ -3,44 +3,60 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-type Variant = {
-  id: number;
-  available: number;
-  variant_option_value1: string;
-};
+// 👉 ตั้งวันปิดขาย / วันสำคัญ
+const SALE_END = new Date(2026, 2, 26, 23, 59, 59); // 26 มี.ค. 2026
 
 type Product = {
   product_name: string;
   price: string;
   img_url: string;
-  product_variants: Variant[];
 };
+
+type TimeLeft = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+} | null;
+
+function getTimeLeft(): TimeLeft {
+  const diff = SALE_END.getTime() - Date.now();
+  if (diff <= 0) return null;
+
+  return {
+    days: Math.floor(diff / 86400000),
+    hours: Math.floor((diff % 86400000) / 3600000),
+    minutes: Math.floor((diff % 3600000) / 60000),
+    seconds: Math.floor((diff % 60000) / 1000),
+  };
+}
+
+function pad(n: number) {
+  return String(n).padStart(2, '0');
+}
 
 export default function MerchStats() {
   const [product, setProduct] = useState<Product | null>(null);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(null);
 
   useEffect(() => {
-  fetch('/api/merch')
-    .then((res) => res.json())
-    .then((res) => {
-      setProduct(res.data);
-    });
-}, []);
+    fetch('/api/merch')
+      .then((res) => res.json())
+      .then((res) => {
+        setProduct(res.data);
+      });
+
+    const update = () => {
+      setTimeLeft(getTimeLeft());
+    };
+
+    update();
+    const id = setInterval(update, 1000);
+
+    return () => clearInterval(id);
+  }, []);
 
   if (!product) return null;
-
-  // 👉 คำนวณยอดขาย
-  const totalSold = product.product_variants.reduce((sum, v) => {
-    return sum + (99 - v.available);
-  }, 0);
-
-  const totalStock = product.product_variants.reduce((sum, v) => {
-    return sum + v.available;
-  }, 0);
-
-  const totalMax = product.product_variants.length * 99;
-
-  const percent = Math.round((totalSold / totalMax) * 100);
 
   return (
     <div className="bg-white/10 border border-[#1B90C8]/40 rounded-2xl p-4 backdrop-blur-sm shadow-lg">
@@ -49,17 +65,6 @@ export default function MerchStats() {
       <p className="text-[#72C4E8] text-xs font-bold tracking-widest text-center">
         🎂 BIRTHDAY MERCH
       </p>
-
-      <div className="mt-3 text-center">
-  <a
-    href="https://shop.line.me/@siamdol/product/1007977948"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-block bg-[#1B90C8] text-white text-sm font-semibold px-4 py-2 rounded-xl shadow hover:scale-105 transition"
-  >
-    🛒 สั่งซื้อสินค้า
-  </a>
-</div>
 
       {/* Image */}
       <div className="flex justify-center mt-3">
@@ -77,41 +82,53 @@ export default function MerchStats() {
         {product.product_name}
       </p>
 
-      {/* Sold */}
-      <p className="text-white text-3xl font-black text-center mt-3">
-        {totalSold.toLocaleString()}
-      </p>
+      {/* Countdown */}
+      <div className="mt-4 text-center">
+        {timeLeft ? (
+          <>
+            <p className="text-[#72C4E8] text-xs tracking-widest mb-2">
+              ⏱ ปิดขายในอีก
+            </p>
 
-      <p className="text-[#72C4E8] text-xs text-center tracking-widest">
-        SOLD
-      </p>
-
-      {/* Progress bar */}
-      <div className="mt-4">
-        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-[#1B90C8]"
-            style={{ width: `${percent}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Variant breakdown (optional เท่ๆ) */}
-      <div className="mt-4 space-y-1 max-h-32 overflow-auto pr-1">
-        {product.product_variants.map((v) => {
-          const sold = 99 - v.available;
-
-          return (
-            <div
-              key={v.id}
-              className="flex justify-between text-xs text-white/70"
-            >
-              <span>{v.variant_option_value1}</span>
-              <span>{sold} sold</span>
+            <div className="flex justify-center gap-2">
+              {[
+                { label: 'วัน', value: timeLeft.days },
+                { label: 'ชม.', value: timeLeft.hours },
+                { label: 'นาที', value: timeLeft.minutes },
+                { label: 'วิ', value: timeLeft.seconds },
+              ].map((u) => (
+                <div key={u.label} className="flex flex-col items-center">
+                  <div className="w-12 h-12 bg-white/10 border border-[#1B90C8]/50 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">
+                      {pad(u.value)}
+                    </span>
+                  </div>
+                  <span className="text-[9px] text-[#72C4E8] mt-1">
+                    {u.label}
+                  </span>
+                </div>
+              ))}
             </div>
-          );
-        })}
+          </>
+        ) : (
+          <p className="text-red-400 text-sm font-semibold mt-2">
+            🔴 ปิดการสั่งซื้อแล้ว
+          </p>
+        )}
       </div>
+
+      {/* CTA */}
+      <div className="mt-4 text-center">
+        <a
+          href="https://shop.line.me/@siamdol/product/1007977948"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-[#1B90C8] text-white text-sm font-semibold px-4 py-2 rounded-xl shadow hover:scale-105 transition"
+        >
+          🛒 สั่งซื้อสินค้า
+        </a>
+      </div>
+
     </div>
   );
 }
