@@ -94,11 +94,6 @@ export default function MerchStats() {
             style={{ width: `${percent}%` }}
           />
         </div>
-
-        <div className="flex justify-between text-[10px] text-white/50 mt-1">
-          <span>{percent}%</span>
-          <span>เหลือ {totalStock}</span>
-        </div>
       </div>
 
       {/* Variant breakdown (optional เท่ๆ) */}
