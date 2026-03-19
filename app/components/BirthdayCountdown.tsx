@@ -6,6 +6,7 @@ import Image from 'next/image';
 import ScheduleSection from './ScheduleSection';
 import ChekiCount from './ChekiCount';
 import RunnerGame from './RunnerGame';
+import MerchStats from './MerchStats';
 
 // April 6, 2026 00:00:00
 const BIRTHDAY = new Date(2026, 3, 6, 0, 0, 0);
@@ -202,6 +203,24 @@ export default function BirthdayCountdown({ onExpired }: { onExpired: () => void
             {activeTab === 'cheki'    && <ChekiCount />}
             {activeTab === 'schedule' && <ScheduleSection />}
           </motion.div>
+
+          {/* Divider */}
+<div className="w-full max-w-2xl flex items-center gap-3">
+  <div className="flex-1 h-px bg-white/10" />
+  <span className="text-[#72C4E8] text-xs font-bold tracking-widest">
+    🛍 MERCH
+  </span>
+  <div className="flex-1 h-px bg-white/10" />
+</div>
+
+<motion.div
+  className="w-full max-w-2xl"
+  initial={{ opacity: 0, y: 16 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.8, duration: 0.5 }}
+>
+  <MerchStats />
+</motion.div>
 
           {/* Divider */}
           <div className="w-full max-w-2xl flex items-center gap-3">
