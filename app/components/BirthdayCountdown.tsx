@@ -7,6 +7,7 @@ import ScheduleSection from './ScheduleSection';
 import ChekiCount from './ChekiCount';
 import RunnerGame from './RunnerGame';
 import MerchStats from './MerchStats';
+import InstagramSection from './InstagramSection';
 
 // April 6, 2026 00:00:00
 const BIRTHDAY = new Date(2026, 3, 6, 0, 0, 0);
@@ -237,6 +238,16 @@ export default function BirthdayCountdown({ onExpired }: { onExpired: () => void
             transition={{ delay: 0.9, duration: 0.5 }}
           >
             <RunnerGame />
+          </motion.div>
+
+          {/* Instagram */}
+          <motion.div
+            className="w-full max-w-2xl"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0, duration: 0.5 }}
+          >
+            <InstagramSection />
           </motion.div>
 
         </div>
