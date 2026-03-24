@@ -6,10 +6,16 @@ import Image from 'next/image';
 // 👉 ตั้งวันปิดขาย / วันสำคัญ
 const SALE_END = new Date(2026, 2, 26, 23, 59, 59); // 26 มี.ค. 2026
 
+type Variant = {
+  variant_option_value1: string;
+  available: number;
+};
+
 type Product = {
   product_name: string;
   price: string;
   img_url: string;
+  product_variants: Variant[];
 };
 
 type TimeLeft = {
@@ -38,6 +44,7 @@ function pad(n: number) {
 export default function MerchStats() {
   const [product, setProduct] = useState<Product | null>(null);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(null);
+  const [showStock, setShowStock] = useState(false);
 
   useEffect(() => {
     fetch('/api/merch')
@@ -62,9 +69,57 @@ export default function MerchStats() {
     <div className="bg-white/10 border border-[#1B90C8]/40 rounded-2xl p-4 backdrop-blur-sm shadow-lg">
 
       {/* Header */}
-      <p className="text-[#72C4E8] text-xs font-bold tracking-widest text-center">
-        🎂 BIRTHDAY MERCH
-      </p>
+      <div className="flex items-center justify-center gap-2">
+        <p className="text-[#72C4E8] text-xs font-bold tracking-widest">
+          🎂 BIRTHDAY MERCH
+        </p>
+        <button
+          onClick={() => setShowStock(true)}
+          className="text-[10px] text-white/50 border border-white/20 rounded-full px-2 py-0.5 hover:text-white hover:border-white/50 transition"
+        >
+          stock
+        </button>
+      </div>
+
+      {/* Stock Modal */}
+      {showStock && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4"
+          onClick={() => setShowStock(false)}
+        >
+          <div
+            className="bg-[#04111F] border border-[#1B90C8]/40 rounded-2xl p-5 w-full max-w-xs shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-[#72C4E8] text-xs font-bold tracking-widest">📦 STOCK</p>
+              <button
+                onClick={() => setShowStock(false)}
+                className="text-white/40 hover:text-white text-lg leading-none transition"
+              >✕</button>
+            </div>
+            <div className="flex flex-col gap-2">
+              {product.product_variants.map((v) => {
+                const sold = 99 - v.available;
+                return (
+                  <div key={v.variant_option_value1} className="flex items-center justify-between">
+                    <span className="text-white text-sm">{v.variant_option_value1}</span>
+                    <span className={`text-sm font-semibold ${sold === 99 ? 'text-red-400' : 'text-[#72C4E8]'}`}>
+                      ขายแล้ว {sold}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
+              <span className="text-white/60 text-xs">ยอดรวมทั้งหมด</span>
+              <span className="text-white font-bold text-sm">
+                {product.product_variants.reduce((sum, v) => sum + (99 - v.available), 0)} ชิ้น
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Image */}
       <div className="flex justify-center mt-3">

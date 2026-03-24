@@ -9,7 +9,6 @@ import FactsSection from './components/FactsSection';
 import GallerySection from './components/GallerySection';
 import ToolsSection from './components/ToolsSection';
 import RunnerGame from './components/RunnerGame';
-import InstagramSection from './components/InstagramSection';
 
 const BIRTHDAY = new Date(2026, 3, 6, 0, 0, 0); // April 6, 2026
 
@@ -31,7 +30,6 @@ function MainSite() {
           <RunnerGame />
         </div>
       </section>
-      <InstagramSection />
     </Layout>
   );
 }
