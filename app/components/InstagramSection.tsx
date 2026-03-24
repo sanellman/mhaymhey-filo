@@ -76,9 +76,7 @@ export default function InstagramSection() {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-                  <span className="opacity-0 group-hover:opacity-100 text-white text-2xl transition-opacity duration-300">
-                    {post.is_video ? '▶' : '🔍'}
-                  </span>
+                  <span className="opacity-0 group-hover:opacity-100 text-white text-2xl transition-opacity duration-300">🔍</span>
                 </div>
               </motion.a>
             ))}
