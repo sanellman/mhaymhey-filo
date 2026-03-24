@@ -9,9 +9,13 @@ export async function GET(req: NextRequest) {
   try {
     const res = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
         'Referer': 'https://www.instagram.com/',
         'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+        'X-ASBD-ID': '129477',
+        'X-CSRFToken': 'RPVdwTY6IDS3FTP1QKD8jYS81YvZXX52',
+        'X-IG-App-ID': '936619743392459',
+        'X-Requested-With': 'XMLHttpRequest',
       },
     });
 

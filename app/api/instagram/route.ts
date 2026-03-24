@@ -6,10 +6,13 @@ export async function GET() {
       'https://www.instagram.com/api/v1/users/web_profile_info/?username=mhaymhey.stellagrima',
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
           'Accept': '*/*',
           'Accept-Language': 'en-US,en;q=0.9',
+          'X-ASBD-ID': '129477',
+          'X-CSRFToken': 'RPVdwTY6IDS3FTP1QKD8jYS81YvZXX52',
           'X-IG-App-ID': '936619743392459',
+          'X-Requested-With': 'XMLHttpRequest',
           'Referer': 'https://www.instagram.com/',
           'Origin': 'https://www.instagram.com',
         },
