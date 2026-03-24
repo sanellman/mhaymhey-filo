@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const revalidate = 86400; // revalidate once per day at most
+
 export async function GET() {
   try {
     const res = await fetch(
@@ -16,7 +18,7 @@ export async function GET() {
           'Referer': 'https://www.instagram.com/',
           'Origin': 'https://www.instagram.com',
         },
-        next: { revalidate: 300 }, // cache 5 minutes
+        next: { revalidate: 86400 },
       }
     );
 
@@ -25,7 +27,11 @@ export async function GET() {
     }
 
     const data = await res.json();
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
+      },
+    });
   } catch (err) {
     console.error('INSTAGRAM API ERROR', err);
     return NextResponse.json({ error: 'fetch failed' }, { status: 500 });
