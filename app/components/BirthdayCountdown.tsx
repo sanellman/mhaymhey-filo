@@ -52,26 +52,26 @@ const TOOL_TABS = [
 
 // ─── Main Countdown ────────────────────────────────────────────────────────
 export default function BirthdayCountdown({ onExpired }: { onExpired: () => void }) {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(null);
   const [activeTab, setActiveTab] = useState('cheki');
 
   useEffect(() => {
-    setMounted(true);
-    const tl = getTimeLeft();
-    if (!tl) { onExpired(); return; }
-    setTimeLeft(tl);
-
     const id = setInterval(() => {
       const next = getTimeLeft();
       if (!next) { clearInterval(id); onExpired(); return; }
       setTimeLeft(next);
     }, 1000);
 
-    return () => clearInterval(id);
+    const init = setTimeout(() => {
+      const tl = getTimeLeft();
+      if (!tl) { onExpired(); return; }
+      setTimeLeft(tl);
+    }, 0);
+
+    return () => { clearInterval(id); clearTimeout(init); };
   }, [onExpired]);
 
-  if (!mounted) return null;
+  if (timeLeft === null) return null;
 
   const units = timeLeft
     ? [
