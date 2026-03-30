@@ -21,11 +21,32 @@ const VIEW_MODE_KEY = 'mmScheduleViewMode';
 type ColorScheme = { bg: string; text: string; dot: string };
 
 const GROUP_COLOR_MAP: Record<string, ColorScheme> = {
-  'Stellagrima 💙': { bg: 'bg-blue-100',    text: 'text-blue-900',    dot: 'bg-blue-500' },
-  'BNK48':          { bg: 'bg-pink-100',    text: 'text-pink-800',    dot: 'bg-pink-400' },
-  'CGM48':          { bg: 'bg-sky-100',     text: 'text-sky-800',     dot: 'bg-sky-400' },
-  'Euphonie':       { bg: 'bg-yellow-100',  text: 'text-yellow-800',  dot: 'bg-yellow-400' },
-  'Other':          { bg: 'bg-gray-100',    text: 'text-gray-600',    dot: 'bg-gray-300' },
+  'ANGeVIL✟':        { bg: 'bg-purple-100',  text: 'text-purple-800',  dot: 'bg-purple-400' },
+  'BNK48':           { bg: 'bg-pink-100',    text: 'text-pink-800',    dot: 'bg-pink-400' },
+  'CGM48':           { bg: 'bg-sky-100',     text: 'text-sky-800',     dot: 'bg-sky-400' },
+  'Chocolatière':    { bg: 'bg-amber-100',   text: 'text-amber-800',   dot: 'bg-amber-400' },
+  'Denshi220':       { bg: 'bg-cyan-100',    text: 'text-cyan-800',    dot: 'bg-cyan-400' },
+  'Euphonie':        { bg: 'bg-yellow-100',  text: 'text-yellow-800',  dot: 'bg-yellow-400' },
+  'HatoBito':        { bg: 'bg-green-100',   text: 'text-green-800',   dot: 'bg-green-400' },
+  'IKINARI TELL ME': { bg: 'bg-orange-100',  text: 'text-orange-800',  dot: 'bg-orange-400' },
+  'Isekai':          { bg: 'bg-violet-100',  text: 'text-violet-800',  dot: 'bg-violet-400' },
+  'KNIGHT✠RES':      { bg: 'bg-red-100',     text: 'text-red-800',     dot: 'bg-red-400' },
+  'KYLINZ':          { bg: 'bg-lime-100',    text: 'text-lime-800',    dot: 'bg-lime-400' },
+  'Mirai Mirai':     { bg: 'bg-teal-100',    text: 'text-teal-800',    dot: 'bg-teal-400' },
+  'Myujikku Majo':   { bg: 'bg-fuchsia-100', text: 'text-fuchsia-800', dot: 'bg-fuchsia-400' },
+  'Neko Pon!':       { bg: 'bg-orange-50',   text: 'text-orange-700',  dot: 'bg-orange-300' },
+  'NIKKO NIKKO':     { bg: 'bg-yellow-50',   text: 'text-yellow-700',  dot: 'bg-yellow-300' },
+  'Peach You':       { bg: 'bg-rose-100',    text: 'text-rose-800',    dot: 'bg-rose-400' },
+  'Seishin Kakumei': { bg: 'bg-indigo-100',  text: 'text-indigo-800',  dot: 'bg-indigo-400' },
+  'Siamdol Cafe':    { bg: 'bg-amber-50',    text: 'text-amber-700',   dot: 'bg-amber-300' },
+  'Sora! Sora!':     { bg: 'bg-sky-50',      text: 'text-sky-700',     dot: 'bg-sky-300' },
+  'STARRY NITE':     { bg: 'bg-blue-100',    text: 'text-blue-800',    dot: 'bg-blue-400' },
+  'Stellagrima 💙':  { bg: 'bg-blue-100',    text: 'text-blue-900',    dot: 'bg-blue-500' },
+  'SUMOMO':          { bg: 'bg-pink-50',     text: 'text-pink-700',    dot: 'bg-pink-300' },
+  'The Glass Girls': { bg: 'bg-slate-100',   text: 'text-slate-800',   dot: 'bg-slate-400' },
+  'Vinx':            { bg: 'bg-violet-50',   text: 'text-violet-700',  dot: 'bg-violet-300' },
+  'Yami Yami':       { bg: 'bg-gray-100',    text: 'text-gray-700',    dot: 'bg-gray-400' },
+  'Other':           { bg: 'bg-gray-100',    text: 'text-gray-600',    dot: 'bg-gray-300' },
 };
 const DEFAULT_COLOR: ColorScheme = { bg: 'bg-gray-100', text: 'text-gray-600', dot: 'bg-gray-300' };
 
@@ -110,13 +131,13 @@ function CalendarCells({
         <div
           key={dateStr}
           onClick={() => isCurrentMonth && onSelectDate(dateStr)}
-          className={`flex flex-col items-center py-1 rounded-xl transition-all ${isCurrentMonth ? 'cursor-pointer hover:bg-[#DBEAFE] active:bg-blue-100' : ''}`}
+          className={`flex flex-col items-center py-1 rounded-xl transition-all ${isCurrentMonth ? 'cursor-pointer hover:bg-white/10 active:bg-white/15' : ''}`}
         >
           <span className={`w-7 h-7 flex items-center justify-center rounded-full text-xs font-medium transition-all ${
             isSelected ? 'bg-[#3AA6E3] text-white shadow-md'
-            : isToday ? 'bg-[#DBEAFE] text-[#1E4D7A] font-bold'
-            : isCurrentMonth ? 'text-[#1A3A5C]'
-            : 'text-gray-300'
+            : isToday ? 'bg-[#72C4E8]/20 text-[#72C4E8] font-bold'
+            : isCurrentMonth ? 'text-white/80'
+            : 'text-white/20'
           }`}>
             {format(day, 'd')}
           </span>
@@ -163,47 +184,47 @@ function BottomSheet({
       <motion.div
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-        className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl max-h-[90dvh] overflow-y-auto shadow-2xl"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-[#0A1B2E] rounded-t-3xl max-h-[90dvh] overflow-y-auto shadow-2xl border-t border-white/10"
       >
         <div className="flex justify-center pt-3 pb-2">
-          <div className="w-10 h-1 rounded-full bg-gray-200" />
+          <div className="w-10 h-1 rounded-full bg-white/20" />
         </div>
         <div className="px-5 pb-10 pt-1">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-base font-bold text-[#1A3A5C]">
+            <h3 className="text-base font-bold text-white">
               {isViewMode ? '📋 รายละเอียดงาน' : modalEvent.id ? '✏️ แก้ไขงาน' : '➕ เพิ่มงานใหม่'}
             </h3>
-            <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 text-xs transition">✕</button>
+            <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-full bg-white/10 text-white/60 hover:bg-white/20 text-xs transition">✕</button>
           </div>
 
           {/* View Mode */}
           {isViewMode && (
             <div className="space-y-4">
               <div>
-                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">วันที่</p>
-                <p className="font-semibold text-[#1A3A5C]">{format(parseDateLocal(modalEvent.date), 'EEEE, d MMMM yyyy')}</p>
+                <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">วันที่</p>
+                <p className="font-semibold text-white">{format(parseDateLocal(modalEvent.date), 'EEEE, d MMMM yyyy')}</p>
               </div>
               <div>
-                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">กลุ่ม</p>
+                <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">กลุ่ม</p>
                 <span className={`inline-block text-sm font-bold px-3 py-1 rounded-full ${color.bg} ${color.text}`}>{modalEvent.group}</span>
               </div>
               {getSortedTimes(modalEvent).map((item, i) => (
                 <div key={i}>
-                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                  <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">
                     {item.icon} {item.icon === '🎤' ? 'Stage Time' : 'Cheki Time'}
                   </p>
-                  <p className="font-semibold text-[#1A3A5C]">{item.label}</p>
+                  <p className="font-semibold text-white">{item.label}</p>
                 </div>
               ))}
               {modalEvent.note && (
                 <div>
-                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">📝 Note</p>
-                  <p className="text-sm text-gray-600">{modalEvent.note}</p>
+                  <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">📝 Note</p>
+                  <p className="text-sm text-white/60">{modalEvent.note}</p>
                 </div>
               )}
               <div className="flex gap-2 pt-2">
                 <button onClick={() => setIsEditing(true)} className="flex-1 py-3 rounded-2xl bg-[#3AA6E3] text-white font-bold text-sm hover:bg-[#2A90CC] active:scale-95 transition-all">✏️ แก้ไข</button>
-                <button onClick={() => modalEvent.id && onDelete(modalEvent.id)} className="w-14 py-3 rounded-2xl bg-red-50 text-red-500 font-bold text-lg hover:bg-red-100 active:scale-95 transition-all">🗑️</button>
+                <button onClick={() => modalEvent.id && onDelete(modalEvent.id)} className="w-14 py-3 rounded-2xl bg-red-500/15 text-red-400 font-bold text-lg hover:bg-red-500/25 active:scale-95 transition-all">🗑️</button>
               </div>
             </div>
           )}
@@ -212,51 +233,58 @@ function BottomSheet({
           {!isViewMode && (
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">วันที่</label>
-                <input type="date" className="w-full border border-gray-200 px-4 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7EC8F0] bg-gray-50"
+                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">วันที่</label>
+                <input type="date" className="w-full border border-white/15 px-4 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8]/50 bg-white/8 text-white"
                   value={modalEvent.date} onChange={(e) => setModalEvent({ ...modalEvent, date: e.target.value })} />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">กลุ่ม</label>
+                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">กลุ่ม</label>
                 <Select
                   options={GROUP_OPTIONS}
                   value={GROUP_OPTIONS.find((o) => o.value === modalEvent.group) || null}
                   onChange={(s) => setModalEvent({ ...modalEvent, group: s?.value || '' })}
                   isClearable placeholder="เลือกกลุ่ม..."
                   styles={{
-                    control: (base, state) => ({ ...base, borderRadius: '1rem', borderColor: state.isFocused ? '#3AA6E3' : '#e5e7eb', boxShadow: state.isFocused ? '0 0 0 2px #BFDFFF' : 'none', backgroundColor: '#f9fafb', '&:hover': { borderColor: '#3AA6E3' } }),
-                    option: (base, state) => ({ ...base, backgroundColor: state.isSelected ? '#3AA6E3' : state.isFocused ? '#EFF8FF' : 'white', color: state.isSelected ? 'white' : '#1A3A5C' }),
+                    control: (base, state) => ({ ...base, borderRadius: '1rem', borderColor: state.isFocused ? '#72C4E8' : 'rgba(255,255,255,0.15)', boxShadow: state.isFocused ? '0 0 0 2px rgba(114,196,232,0.25)' : 'none', backgroundColor: 'rgba(255,255,255,0.08)', '&:hover': { borderColor: '#72C4E8' } }),
+                    singleValue: (base) => ({ ...base, color: 'white' }),
+                    placeholder: (base) => ({ ...base, color: 'rgba(255,255,255,0.35)' }),
+                    input: (base) => ({ ...base, color: 'white' }),
+                    menu: (base) => ({ ...base, backgroundColor: '#0A1B2E', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '1rem', overflow: 'hidden' }),
+                    option: (base, state) => ({ ...base, backgroundColor: state.isSelected ? '#3AA6E3' : state.isFocused ? 'rgba(114,196,232,0.15)' : 'transparent', color: state.isSelected ? 'white' : 'rgba(255,255,255,0.85)' }),
+                    clearIndicator: (base) => ({ ...base, color: 'rgba(255,255,255,0.4)', '&:hover': { color: 'white' } }),
+                    dropdownIndicator: (base) => ({ ...base, color: 'rgba(255,255,255,0.4)', '&:hover': { color: 'white' } }),
+                    indicatorSeparator: (base) => ({ ...base, backgroundColor: 'rgba(255,255,255,0.15)' }),
                   }}
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">🎤 Stage Time</label>
+                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">🎤 Stage Time</label>
                 <div className="flex items-center gap-2">
-                  <input type="time" className="flex-1 border border-gray-200 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7EC8F0] bg-gray-50"
+                  <input type="time" className="flex-1 border border-white/15 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8]/50 bg-white/8 text-white"
                     value={modalEvent.stageTimeStart || ''} onChange={(e) => setModalEvent({ ...modalEvent, stageTimeStart: e.target.value })} />
-                  <span className="text-gray-400 text-xs font-medium">ถึง</span>
-                  <input type="time" className="flex-1 border border-gray-200 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7EC8F0] bg-gray-50"
+                  <span className="text-white/30 text-xs font-medium">ถึง</span>
+                  <input type="time" className="flex-1 border border-white/15 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8]/50 bg-white/8 text-white"
                     value={modalEvent.stageTimeEnd || ''} onChange={(e) => setModalEvent({ ...modalEvent, stageTimeEnd: e.target.value })} />
                 </div>
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">📸 Cheki Time</label>
+                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">📸 Cheki Time</label>
                 <div className="flex items-center gap-2">
-                  <input type="time" className="flex-1 border border-gray-200 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7EC8F0] bg-gray-50"
+                  <input type="time" className="flex-1 border border-white/15 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8]/50 bg-white/8 text-white"
                     value={modalEvent.chekiTimeStart || ''} onChange={(e) => setModalEvent({ ...modalEvent, chekiTimeStart: e.target.value })} />
-                  <span className="text-gray-400 text-xs font-medium">ถึง</span>
-                  <input type="time" className="flex-1 border border-gray-200 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7EC8F0] bg-gray-50"
+                  <span className="text-white/30 text-xs font-medium">ถึง</span>
+                  <input type="time" className="flex-1 border border-white/15 px-3 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8]/50 bg-white/8 text-white"
                     value={modalEvent.chekiTimeEnd || ''} onChange={(e) => setModalEvent({ ...modalEvent, chekiTimeEnd: e.target.value })} />
                 </div>
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">📝 Note</label>
-                <textarea className="w-full border border-gray-200 px-4 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7EC8F0] bg-gray-50 resize-none"
+                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">📝 Note</label>
+                <textarea className="w-full border border-white/15 px-4 py-2.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#72C4E8]/50 bg-white/8 text-white placeholder:text-white/30 resize-none"
                   rows={2} placeholder="หมายเหตุ..." value={modalEvent.note || ''} onChange={(e) => setModalEvent({ ...modalEvent, note: e.target.value })} />
               </div>
               <div className="flex gap-3 pt-1">
-                <button onClick={onClose} className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 active:scale-95 transition-all">ยกเลิก</button>
-                <button onClick={onSave} className="flex-1 py-3 rounded-2xl bg-[#3AA6E3] text-white font-bold text-sm hover:bg-[#2A90CC] active:scale-95 transition-all shadow-md shadow-blue-200">💾 บันทึก</button>
+                <button onClick={onClose} className="flex-1 py-3 rounded-2xl border border-white/15 text-white/60 text-sm font-semibold hover:bg-white/8 active:scale-95 transition-all">ยกเลิก</button>
+                <button onClick={onSave} className="flex-1 py-3 rounded-2xl bg-[#3AA6E3] text-white font-bold text-sm hover:bg-[#2A90CC] active:scale-95 transition-all shadow-md shadow-blue-900/50">💾 บันทึก</button>
               </div>
             </div>
           )}
@@ -376,18 +404,18 @@ export default function ScheduleSection() {
       {/* Calendar */}
       {viewMode === 'calendar' && (
         <div className="px-3 mb-3">
-          <div className="bg-white rounded-2xl shadow-sm p-3 border border-[#C5E4F9]">
+          <div className="bg-white/8 rounded-2xl p-3 border border-white/10">
             <div className="flex items-center justify-between mb-3">
-              <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 text-xl transition">‹</button>
+              <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-white/50 text-xl transition">‹</button>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-sm">{format(currentMonth, 'MMMM yyyy')}</span>
-                <button onClick={() => { setCurrentMonth(new Date()); setSelectedDate(todayStr); }} className="text-[10px] text-[#3AA6E3] bg-[#EFF8FF] px-2 py-0.5 rounded-full font-semibold hover:bg-[#DBEAFE] transition">Today</button>
+                <span className="font-bold text-sm text-white">{format(currentMonth, 'MMMM yyyy')}</span>
+                <button onClick={() => { setCurrentMonth(new Date()); setSelectedDate(todayStr); }} className="text-[10px] text-[#72C4E8] bg-[#72C4E8]/15 px-2 py-0.5 rounded-full font-semibold hover:bg-[#72C4E8]/25 transition">Today</button>
               </div>
-              <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 text-xl transition">›</button>
+              <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-white/50 text-xl transition">›</button>
             </div>
             <div className="grid grid-cols-7 mb-1">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-                <div key={d} className="text-center text-[10px] font-bold text-gray-400 py-1">{d}</div>
+                <div key={d} className="text-center text-[10px] font-bold text-white/30 py-1">{d}</div>
               ))}
             </div>
             <CalendarCells currentMonth={currentMonth} eventsByDate={eventsByDate} selectedDate={selectedDate} todayStr={todayStr} onSelectDate={(d) => setSelectedDate(selectedDate === d ? null : d)} />
@@ -395,9 +423,9 @@ export default function ScheduleSection() {
           {selectedDate && (
             <div className="flex items-center gap-2 mt-2 px-1">
               <span className="text-[11px] text-gray-400">แสดง:</span>
-              <span className="flex items-center gap-1 bg-[#DBEAFE] text-[#1E4D7A] text-xs px-2.5 py-1 rounded-full font-semibold">
+              <span className="flex items-center gap-1 bg-[#72C4E8]/20 text-[#72C4E8] text-xs px-2.5 py-1 rounded-full font-semibold">
                 {format(parseDateLocal(selectedDate), 'd MMM yyyy')}
-                <button onClick={() => setSelectedDate(null)} className="ml-1 text-[#3AA6E3] hover:text-[#1E4D7A] leading-none">✕</button>
+                <button onClick={() => setSelectedDate(null)} className="ml-1 text-[#72C4E8] hover:text-white leading-none">✕</button>
               </span>
             </div>
           )}
