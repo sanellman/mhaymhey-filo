@@ -332,7 +332,7 @@ export default function ScheduleSection() {
 
   const handleAddClick = () => {
     setIsEditing(true);
-    setModalEvent({ group: '', date: todayStr, stageTimeStart: '', stageTimeEnd: '', chekiTimeStart: '', chekiTimeEnd: '', note: '' });
+    setModalEvent({ group: '', date: selectedDate ?? todayStr, stageTimeStart: '', stageTimeEnd: '', chekiTimeStart: '', chekiTimeEnd: '', note: '' });
   };
 
   const handleEventClick = (event: EventData) => {
