@@ -94,7 +94,7 @@ export default function GallerySection() {
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
       >
-        📸 แกลเลอรี่ mhaymhey
+        📸 Gallery Mhaymhey 
       </motion.h2>
 
       {images.length === 0 ? (

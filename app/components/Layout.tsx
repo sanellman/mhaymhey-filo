@@ -64,7 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Left: branding */}
           <div className="flex flex-col leading-tight">
-            <span className="text-lg font-black text-white tracking-tight">✦ mhaymhey</span>
+            <span className="text-lg font-black text-white tracking-tight">✦ Mhaymhey</span>
             <span className="text-[11px] font-semibold text-[#72C4E8] tracking-widest uppercase">
               Stellagrima 💙
             </span>
@@ -120,7 +120,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="h-0.5 w-full bg-gradient-to-r from-[#1B90C8] via-[#72C4E8] to-[#1B90C8]" />
         <div className="max-w-5xl mx-auto px-5 py-10 flex flex-col items-center gap-5">
           <div className="text-center">
-            <p className="text-xl font-black tracking-tight">✦ mhaymhey</p>
+            <p className="text-xl font-black tracking-tight">✦ Mhaymhey</p>
             <p className="text-[11px] font-semibold text-[#72C4E8] tracking-widest uppercase mt-0.5">
               Stellagrima 💙
             </p>
@@ -128,21 +128,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div>
             <p className="text-center text-xs text-[#5C96B8] mb-3">ติดตามได้ที่ 💙</p>
             <div className="flex justify-center gap-5 text-2xl text-[#72C4E8]">
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <a href="https://www.facebook.com/profile.php?id=61582823475695" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <FaFacebook className="hover:text-white transition" />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a href="https://www.instagram.com/mhaymhey.stellagrima" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <FaInstagram className="hover:text-pink-400 transition" />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">
+              <a href="https://x.com/MhayMhey_Stella" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">
                 <FaXTwitter className="hover:text-white transition" />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <a href="https://www.tiktok.com/@mhaymhey.stellagrima" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
                 <FaTiktok className="hover:text-white transition" />
               </a>
             </div>
           </div>
-          <p className="text-xs text-white/20">© 2025 mhaymhey Fan Project</p>
+          <p className="text-xs text-white/20">© 2026 Mhaymhey Fan Project</p>
         </div>
       </footer>
 

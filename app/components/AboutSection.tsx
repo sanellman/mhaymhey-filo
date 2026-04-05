@@ -29,7 +29,7 @@ export default function AboutSection() {
             ✦ Profile
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-white">
-            เกี่ยวกับ mhaymhey 💙
+            About Mhaymhey 💙
           </h2>
         </motion.div>
 

@@ -104,7 +104,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            mhaymhey ✦
+            ✦ Mhaymhey
             <br />
             <span className="text-[#72C4E8] text-xl md:text-2xl">Sparkle Blue 💙</span>
           </motion.h1>

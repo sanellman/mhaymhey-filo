@@ -146,10 +146,10 @@ export default function FactsSection() {
           viewport={{ once: true }}
         >
           <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#72C4E8] bg-white/10 border border-white/20 px-3 py-1 rounded-full mb-3">
-            ✦ Fun Facts
+            ✦ Facts
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-white">
-            16 เรื่องที่ควรรู้เกี่ยวกับเหม๋ 💙
+            Facts About Mhaymhey 💙
           </h2>
           <p className="text-sm text-[#72C4E8]/70 mt-2">จาก X @MhayMhey_Stella</p>
         </motion.div>
