@@ -3,10 +3,58 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
+const GALLERY = [
+  '/gallery/20260111_183646.jpg',
+  '/gallery/20260124_152737(2).jpg',
+  '/gallery/20260125_222659(0).jpg',
+  '/gallery/20260201_150144(0).jpg',
+  '/gallery/20260206_165157(0).jpg',
+  '/gallery/20260208_154428.jpg',
+  '/gallery/20260215_213217.jpg',
+  '/gallery/20260221_211200.jpg',
+  '/gallery/20260301_162837(1).jpg',
+  '/gallery/20260307_211133.jpg',
+  '/gallery/20260308_213254.jpg',
+  '/gallery/20260314_163011(0).jpg',
+  '/gallery/20260315_204654.jpg',
+  '/gallery/20260321_190447(0).jpg',
+  '/gallery/20260322_165810.jpg',
+  '/gallery/20260329_161543(1).jpg',
+  '/gallery/20260329_161956.jpg',
+  '/gallery/20260404_161716(0)(1).jpg',
+];
+
+const ROW1 = GALLERY.filter((_, i) => i % 3 === 0);
+const ROW2 = GALLERY.filter((_, i) => i % 3 === 1);
+const ROW3 = GALLERY.filter((_, i) => i % 3 === 2);
+
+function BgStrip({ images }: { images: string[] }) {
+  return (
+    <div className="flex gap-2 overflow-hidden">
+      {images.map((src, i) => (
+        <div key={i} className="shrink-0 w-32 h-44 rounded-xl overflow-hidden">
+          <Image src={src} alt="" width={128} height={176} className="w-full h-full object-cover" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HeroSection() {
   return (
-    <section className="py-12 px-6 overflow-hidden">
-      <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
+    <section className="relative py-12 px-6 overflow-hidden">
+
+      {/* BG photo strip */}
+      <div className="absolute inset-0 flex flex-col justify-center gap-2 opacity-20 pointer-events-none select-none">
+        <BgStrip images={ROW1} />
+        <BgStrip images={ROW2} />
+        <BgStrip images={ROW3} />
+      </div>
+
+      {/* Dark overlay so text stays readable */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#04111F]/60 via-[#04111F]/40 to-[#04111F]/60 pointer-events-none" />
+
+      <div className="relative max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
 
         {/* Image */}
         <motion.div
