@@ -401,7 +401,7 @@ export default function ChekiReport({ open, onClose, allData }: Props) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
           />
 
           {/* Modal panel */}
@@ -415,7 +415,7 @@ export default function ChekiReport({ open, onClose, allData }: Props) {
                        flex flex-col
                        md:max-w-[680px] md:max-h-[88vh] md:rounded-3xl
                        rounded-t-3xl max-h-[92vh]
-                       bg-[#04111F] border border-white/15 shadow-2xl overflow-hidden"
+                       bg-[#04111F] border border-white/15 shadow-2xl overflow-hidden z-[70]"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0 border-b border-white/10">
