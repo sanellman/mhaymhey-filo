@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import dayjs from 'dayjs';
 import type { ChekiAllData } from './ChekiSection';
@@ -389,7 +390,11 @@ export default function ChekiReport({ open, onClose, allData }: Props) {
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
-  return (
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
@@ -465,6 +470,7 @@ export default function ChekiReport({ open, onClose, allData }: Props) {
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
