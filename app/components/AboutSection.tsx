@@ -15,7 +15,7 @@ const INFO_CARDS = [
 
 export default function AboutSection() {
   return (
-    <section id="about" className="py-16 px-6 bg-white text-[#0A2234]">
+    <section id="about" className="py-16 px-6 text-white">
       <div className="max-w-4xl mx-auto">
 
         <motion.div
@@ -25,10 +25,10 @@ export default function AboutSection() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#1B90C8] bg-[#EAF6FF] px-3 py-1 rounded-full mb-3">
+          <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#72C4E8] bg-[#1B90C8]/20 px-3 py-1 rounded-full mb-3">
             ✦ Profile
           </span>
-          <h2 className="text-2xl md:text-3xl font-black text-[#0A2234]">
+          <h2 className="text-2xl md:text-3xl font-black text-white">
             เกี่ยวกับ mhaymhey 💙
           </h2>
         </motion.div>
@@ -38,7 +38,7 @@ export default function AboutSection() {
           {INFO_CARDS.map((card, i) => (
             <motion.div
               key={card.label}
-              className="bg-[#F2F9FF] border border-[#A8D8F5] rounded-2xl p-4 flex gap-3 items-start"
+              className="bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.3 }}
@@ -46,10 +46,10 @@ export default function AboutSection() {
             >
               <span className="text-xl mt-0.5 shrink-0">{card.icon}</span>
               <div>
-                <p className="text-[10px] text-[#5C96B8] font-semibold uppercase tracking-widest mb-0.5">
+                <p className="text-[10px] text-[#72C4E8] font-semibold uppercase tracking-widest mb-0.5">
                   {card.label}
                 </p>
-                <p className="font-bold text-sm text-[#0A2234]">{card.value}</p>
+                <p className="font-bold text-sm text-white">{card.value}</p>
               </div>
             </motion.div>
           ))}
@@ -57,13 +57,13 @@ export default function AboutSection() {
 
         {/* Fav characters */}
         <motion.div
-          className="bg-gradient-to-br from-[#EAF6FF] to-[#F2F9FF] border border-[#A8D8F5] rounded-2xl p-5"
+          className="bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-5"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <p className="text-[10px] font-bold tracking-widest uppercase text-[#1B90C8] mb-3">
+          <p className="text-[10px] font-bold tracking-widest uppercase text-[#72C4E8] mb-3">
             💜 ตัวละครที่ชอบ
           </p>
           <div className="flex flex-wrap gap-2">
@@ -78,7 +78,7 @@ export default function AboutSection() {
               { e: '🩵', n: 'Rem' },
               { e: '🩷', n: 'Beatrice' },
             ].map(({ e, n }) => (
-              <span key={n} className="flex items-center gap-1 bg-white border border-[#A8D8F5] text-[#0A2234] text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+              <span key={n} className="flex items-center gap-1 bg-white/10 border border-[#1B90C8]/40 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                 {e} {n}
               </span>
             ))}

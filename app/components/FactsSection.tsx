@@ -85,11 +85,25 @@ const FACTS = [
   },
 ];
 
+
+function FactCard({ fact }: { fact: (typeof FACTS)[number] }) {
+  return (
+    <div className="shrink-0 w-72 bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start mx-2">
+      <div className="shrink-0 w-7 h-7 rounded-full bg-[#1B90C8] text-white text-xs font-black flex items-center justify-center">
+        {fact.no}
+      </div>
+      <div>
+        <span className="text-lg">{fact.emoji}</span>
+        <p className="text-sm text-white/80 leading-relaxed mt-0.5">{fact.text}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function FactsSection() {
   return (
-    <section id="facts" className="py-16 px-6">
-      <div className="max-w-4xl mx-auto">
-
+    <section id="facts" className="py-16">
+      <div className="max-w-4xl mx-auto px-6">
         <motion.div
           className="text-center mb-10"
           initial={{ opacity: 0, y: -20 }}
@@ -105,29 +119,20 @@ export default function FactsSection() {
           </h2>
           <p className="text-sm text-[#72C4E8]/70 mt-2">จาก X @MhayMhey_Stella</p>
         </motion.div>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {FACTS.map((fact, i) => (
-            <motion.div
-              key={fact.no}
-              className="bg-white border border-[#A8D8F5] rounded-2xl p-4 flex gap-3 items-start hover:shadow-md hover:border-[#1B90C8]/50 transition-all"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: (i % 4) * 0.07, duration: 0.3 }}
-              viewport={{ once: true }}
-            >
-              {/* Number badge */}
-              <div className="shrink-0 w-7 h-7 rounded-full bg-[#1B90C8] text-white text-xs font-black flex items-center justify-center shadow-sm">
-                {fact.no}
-              </div>
-              <div>
-                <span className="text-lg">{fact.emoji}</span>
-                <p className="text-sm text-[#0A2234] leading-relaxed mt-0.5">{fact.text}</p>
-              </div>
-            </motion.div>
-          ))}
+      {/* Single row — scroll left, fade edges */}
+      <div className="max-w-4xl mx-auto px-6">
+        <div
+          className="marquee-track overflow-hidden"
+          style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)' }}
+        >
+          <div className="flex animate-marquee-left">
+            {[...FACTS, ...FACTS].map((fact, i) => (
+              <FactCard key={i} fact={fact} />
+            ))}
+          </div>
         </div>
-
       </div>
     </section>
   );
