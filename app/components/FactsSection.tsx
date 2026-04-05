@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 const FACTS = [
@@ -86,6 +86,8 @@ const FACTS = [
   },
 ];
 
+const doubled = [...FACTS, ...FACTS];
+
 function FactCard({ fact }: { fact: (typeof FACTS)[number] }) {
   return (
     <div className="shrink-0 w-72 bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start">
@@ -102,27 +104,39 @@ function FactCard({ fact }: { fact: (typeof FACTS)[number] }) {
 
 export default function FactsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStart = useRef({ x: 0, scrollLeft: 0 });
+  const isPausedRef = useRef(false);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function onMouseDown(e: React.MouseEvent) {
-    setIsDragging(true);
-    dragStart.current = { x: e.pageX, scrollLeft: scrollRef.current!.scrollLeft };
-  }
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const speed = 0.6;
+    let rafId: number;
+    const tick = () => {
+      if (!isPausedRef.current) {
+        el.scrollLeft += speed;
+        if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
 
-  function onMouseMove(e: React.MouseEvent) {
-    if (!isDragging) return;
-    e.preventDefault();
-    const dx = e.pageX - dragStart.current.x;
-    scrollRef.current!.scrollLeft = dragStart.current.scrollLeft - dx;
-  }
+  const pauseScroll = () => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    isPausedRef.current = true;
+  };
 
-  function onMouseUp() {
-    setIsDragging(false);
-  }
+  const resumeScroll = (delay = 0) => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      isPausedRef.current = false;
+    }, delay);
+  };
 
   return (
-    <section id="facts" className="py-16">
+    <section id="facts" className="py-16 overflow-hidden">
       <div className="max-w-4xl mx-auto px-6">
         <motion.div
           className="text-center mb-10"
@@ -139,25 +153,20 @@ export default function FactsSection() {
           </h2>
           <p className="text-sm text-[#72C4E8]/70 mt-2">จาก X @MhayMhey_Stella</p>
         </motion.div>
+      </div>
 
-        <div
-          ref={scrollRef}
-          className="overflow-x-auto pb-3 cursor-grab active:cursor-grabbing select-none"
-          style={{
-            maskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
-            scrollbarWidth: 'none',
-          }}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
-        >
-          <div className="flex gap-3 w-max">
-            {FACTS.map((fact) => (
-              <FactCard key={fact.no} fact={fact} />
-            ))}
-          </div>
-        </div>
+      <div
+        ref={scrollRef}
+        className="flex gap-3 px-4 overflow-x-auto"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+        onMouseEnter={pauseScroll}
+        onMouseLeave={() => resumeScroll(0)}
+        onTouchStart={pauseScroll}
+        onTouchEnd={() => resumeScroll(2500)}
+      >
+        {doubled.map((fact, i) => (
+          <FactCard key={i} fact={fact} />
+        ))}
       </div>
     </section>
   );
