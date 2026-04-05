@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
@@ -31,6 +31,13 @@ const SPARKLES = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <div className="relative min-h-screen bg-[#04111F] text-white flex flex-col">
@@ -52,7 +59,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="relative z-10 h-0.5 w-full bg-gradient-to-r from-[#1B90C8] via-[#72C4E8] to-[#1B90C8]" />
 
       {/* Navbar */}
-      <header className="relative z-10 bg-[#04111F]/80 backdrop-blur-md border-b border-white/10 sticky top-0">
+      <header className={`sticky top-0 z-50 backdrop-blur-md border-b border-white/10 transition-colors duration-300 ${scrolled ? 'bg-[#04111F]' : 'bg-[#04111F]/80'}`}>
         <div className="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
 
           {/* Left: branding */}

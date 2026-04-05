@@ -33,26 +33,49 @@ export default function AboutSection() {
           </h2>
         </motion.div>
 
-        {/* Info grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-          {INFO_CARDS.map((card, i) => (
-            <motion.div
-              key={card.label}
-              className="bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06, duration: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <span className="text-xl mt-0.5 shrink-0">{card.icon}</span>
-              <div>
-                <p className="text-[10px] text-[#72C4E8] font-semibold uppercase tracking-widest mb-0.5">
-                  {card.label}
-                </p>
-                <p className="font-bold text-sm text-white">{card.value}</p>
-              </div>
-            </motion.div>
-          ))}
+        {/* Info grid — desktop: 2-col grid / mobile: 3-row horizontal scroll */}
+        <div className="mb-8">
+          {/* Mobile: horizontal scroll, 3 rows */}
+          <div className="sm:hidden overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+            <div className="grid grid-rows-3 grid-flow-col gap-3 w-max">
+              {INFO_CARDS.map((card) => (
+                <div
+                  key={card.label}
+                  className="w-52 bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start"
+                >
+                  <span className="text-xl mt-0.5 shrink-0">{card.icon}</span>
+                  <div>
+                    <p className="text-[10px] text-[#72C4E8] font-semibold uppercase tracking-widest mb-0.5">
+                      {card.label}
+                    </p>
+                    <p className="font-bold text-sm text-white">{card.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop: 2-col grid */}
+          <div className="hidden sm:grid grid-cols-2 gap-3">
+            {INFO_CARDS.map((card, i) => (
+              <motion.div
+                key={card.label}
+                className="bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <span className="text-xl mt-0.5 shrink-0">{card.icon}</span>
+                <div>
+                  <p className="text-[10px] text-[#72C4E8] font-semibold uppercase tracking-widest mb-0.5">
+                    {card.label}
+                  </p>
+                  <p className="font-bold text-sm text-white">{card.value}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* Fav characters */}
