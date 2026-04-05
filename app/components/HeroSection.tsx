@@ -28,10 +28,12 @@ const ROW1 = GALLERY.filter((_, i) => i % 3 === 0);
 const ROW2 = GALLERY.filter((_, i) => i % 3 === 1);
 const ROW3 = GALLERY.filter((_, i) => i % 3 === 2);
 
+const fill = (arr: string[]) => [...arr, ...arr, ...arr];
+
 function BgStrip({ images }: { images: string[] }) {
   return (
     <div className="flex gap-2 overflow-hidden">
-      {images.map((src, i) => (
+      {fill(images).map((src, i) => (
         <div key={i} className="shrink-0 w-32 h-44 rounded-xl overflow-hidden">
           <Image src={src} alt="" width={128} height={176} className="w-full h-full object-cover" />
         </div>

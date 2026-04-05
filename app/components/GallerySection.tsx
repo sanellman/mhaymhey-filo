@@ -100,9 +100,10 @@ export default function GallerySection() {
       {images.length === 0 ? (
         <p className="text-center text-white/40 text-sm">ยังไม่มีรูปในแกลเลอรี่</p>
       ) : (
+        <div className="max-w-4xl mx-auto px-6">
         <div
           ref={scrollRef}
-          className="flex gap-3 px-4 overflow-x-auto"
+          className="flex gap-3 overflow-x-auto"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
           onMouseEnter={pauseScroll}
           onMouseLeave={() => resumeScroll(0)}
@@ -124,6 +125,7 @@ export default function GallerySection() {
               />
             </div>
           ))}
+        </div>
         </div>
       )}
 

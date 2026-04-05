@@ -155,18 +155,20 @@ export default function FactsSection() {
         </motion.div>
       </div>
 
-      <div
-        ref={scrollRef}
-        className="flex gap-3 px-4 overflow-x-auto"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
-        onMouseEnter={pauseScroll}
-        onMouseLeave={() => resumeScroll(0)}
-        onTouchStart={pauseScroll}
-        onTouchEnd={() => resumeScroll(2500)}
-      >
-        {doubled.map((fact, i) => (
-          <FactCard key={i} fact={fact} />
-        ))}
+      <div className="max-w-4xl mx-auto px-6">
+        <div
+          ref={scrollRef}
+          className="flex gap-3 overflow-x-auto"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+          onMouseEnter={pauseScroll}
+          onMouseLeave={() => resumeScroll(0)}
+          onTouchStart={pauseScroll}
+          onTouchEnd={() => resumeScroll(2500)}
+        >
+          {doubled.map((fact, i) => (
+            <FactCard key={i} fact={fact} />
+          ))}
+        </div>
       </div>
     </section>
   );
