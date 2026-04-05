@@ -4,9 +4,25 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// ใส่รูปเพิ่มได้ใน /public/gallery/
 const images: string[] = [
-  '/mm.png',
+  '/gallery/20260111_183646.jpg',
+  '/gallery/20260124_152737(2).jpg',
+  '/gallery/20260125_222659(0).jpg',
+  '/gallery/20260201_150144(0).jpg',
+  '/gallery/20260206_165157(0).jpg',
+  '/gallery/20260208_154428.jpg',
+  '/gallery/20260215_213217.jpg',
+  '/gallery/20260221_211200.jpg',
+  '/gallery/20260301_162837(1).jpg',
+  '/gallery/20260307_211133.jpg',
+  '/gallery/20260308_213254.jpg',
+  '/gallery/20260314_163011(0).jpg',
+  '/gallery/20260315_204654.jpg',
+  '/gallery/20260321_190447(0).jpg',
+  '/gallery/20260322_165810.jpg',
+  '/gallery/20260329_161543(1).jpg',
+  '/gallery/20260329_161956.jpg',
+  '/gallery/20260404_161716(0)(1).jpg',
 ];
 
 const doubled = [...images, ...images];

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const FACTS = [
@@ -85,10 +86,9 @@ const FACTS = [
   },
 ];
 
-
 function FactCard({ fact }: { fact: (typeof FACTS)[number] }) {
   return (
-    <div className="shrink-0 w-72 bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start mx-2">
+    <div className="shrink-0 w-72 bg-white/5 border border-[#1B90C8]/30 rounded-2xl p-4 flex gap-3 items-start">
       <div className="shrink-0 w-7 h-7 rounded-full bg-[#1B90C8] text-white text-xs font-black flex items-center justify-center">
         {fact.no}
       </div>
@@ -101,6 +101,26 @@ function FactCard({ fact }: { fact: (typeof FACTS)[number] }) {
 }
 
 export default function FactsSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, scrollLeft: 0 });
+
+  function onMouseDown(e: React.MouseEvent) {
+    setIsDragging(true);
+    dragStart.current = { x: e.pageX, scrollLeft: scrollRef.current!.scrollLeft };
+  }
+
+  function onMouseMove(e: React.MouseEvent) {
+    if (!isDragging) return;
+    e.preventDefault();
+    const dx = e.pageX - dragStart.current.x;
+    scrollRef.current!.scrollLeft = dragStart.current.scrollLeft - dx;
+  }
+
+  function onMouseUp() {
+    setIsDragging(false);
+  }
+
   return (
     <section id="facts" className="py-16">
       <div className="max-w-4xl mx-auto px-6">
@@ -119,17 +139,22 @@ export default function FactsSection() {
           </h2>
           <p className="text-sm text-[#72C4E8]/70 mt-2">จาก X @MhayMhey_Stella</p>
         </motion.div>
-      </div>
 
-      {/* Single row — scroll left, fade edges */}
-      <div className="max-w-4xl mx-auto px-6">
         <div
-          className="marquee-track overflow-hidden"
-          style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)' }}
+          ref={scrollRef}
+          className="overflow-x-auto pb-3 cursor-grab active:cursor-grabbing select-none"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
+            scrollbarWidth: 'none',
+          }}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseUp}
         >
-          <div className="flex animate-marquee-left">
-            {[...FACTS, ...FACTS].map((fact, i) => (
-              <FactCard key={i} fact={fact} />
+          <div className="flex gap-3 w-max">
+            {FACTS.map((fact) => (
+              <FactCard key={fact.no} fact={fact} />
             ))}
           </div>
         </div>
